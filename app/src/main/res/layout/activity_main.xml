@@ -6,30 +6,22 @@
 
     <Button
         android:id="@+id/btn_scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="扫描IP"/>
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="扫描IP"
+        android:layout_weight="1" />
 
     <Button
-        android:id="@+id/btn_touch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="触摸界面" />
-
+        android:id="@+id/btn_touch1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="定点移动"
+        android:layout_weight="1" />
     <Button
         android:id="@+id/btn_touch2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="触摸界面socket"/>
-    <Button
-        android:id="@+id/btn_touch3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="触摸板"/>
-    <Button
-        android:id="@+id/btn_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="test"/>
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="触摸板"
+        android:layout_weight="1" />
 
 </LinearLayout>

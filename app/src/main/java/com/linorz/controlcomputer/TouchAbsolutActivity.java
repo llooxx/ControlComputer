@@ -14,7 +14,7 @@ import android.view.WindowManager;
  * Created by linorz on 2017/7/14.
  */
 
-public class TouchActivity2 extends Activity {
+public class TouchAbsolutActivity extends Activity {
     float x, y;
     int screenWidth, screenHeight, width, height;
     double scale_size = 15.0 / 20;

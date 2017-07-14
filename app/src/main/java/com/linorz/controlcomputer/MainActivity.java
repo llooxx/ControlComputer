@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private final int REQUEST_CODE_SCAN = 0x000;
     private final String DECODED_CONTENT_KEY = "codedContent";
+    Button scan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Button scan = (Button) findViewById(R.id.btn_scan);
-        Button touch = (Button) findViewById(R.id.btn_touch);
+        scan = (Button) findViewById(R.id.btn_scan);
+        Button touch1 = (Button) findViewById(R.id.btn_touch1);
         Button touch2 = (Button) findViewById(R.id.btn_touch2);
-        Button touch3 = (Button) findViewById(R.id.btn_touch3);
-        Button test = (Button) findViewById(R.id.btn_test);
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,38 +47,18 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivityForResult(intent, REQUEST_CODE_SCAN);
             }
         });
-        touch.setOnClickListener(new View.OnClickListener() {
+        touch1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, TouchActivity.class);
+                Intent intent = new Intent(MainActivity.this, TouchAbsolutActivity.class);
                 MainActivity.this.startActivity(intent);
             }
         });
         touch2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, TouchActivity2.class);
+                Intent intent = new Intent(MainActivity.this, TouchPadActivity.class);
                 MainActivity.this.startActivity(intent);
-            }
-        });
-        touch3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, TouchActivity3.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
-        test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SocketUtils.post("test", new SocketUtils.Params()
-                                .add("test", 123)
-                        , new SocketUtils.Connect() {
-                            @Override
-                            public void onResponse(String response) {
-
-                            }
-                        });
             }
         });
     }
@@ -93,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
                     if (data != null) {
                         String content = data.getStringExtra(DECODED_CONTENT_KEY);
                         System.out.println("!!!!!" + content);
-                        HttpUtils.IP = content;
+                        scan.setText(content);
+                        SocketUtils.IP = content;
                     }
                 }
                 break;

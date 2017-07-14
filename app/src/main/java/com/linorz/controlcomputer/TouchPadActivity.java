@@ -13,7 +13,7 @@ import android.view.WindowManager;
  * Created by linorz on 2017/7/14.
  */
 
-public class TouchActivity3 extends Activity {
+public class TouchPadActivity extends Activity {
     double x, y, start_x, start_y, last_x, last_y;
     int screenWidth, screenHeight, width, height;
     double scale_size = 15.0 / 20;

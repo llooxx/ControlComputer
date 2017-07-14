@@ -24,9 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TouchActivity" />
-        <activity android:name=".TouchActivity2" />
-        <activity android:name=".TouchActivity3" />
+        <activity android:name=".TouchAbsolutActivity" />
+        <activity android:name=".TouchPadActivity" />
         <activity android:name=".zxing.android.CaptureActivity" />
         <activity android:name=".zxing.android.PreferencesActivity" />
     </application>

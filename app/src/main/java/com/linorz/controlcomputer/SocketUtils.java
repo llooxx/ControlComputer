@@ -18,6 +18,7 @@ import java.net.UnknownHostException;
  */
 
 public class SocketUtils extends AsyncTask<String, Void, String> {
+    public static String IP = "192.168.1.106";
     public int SERVER_PORT = 2333;
     public int CLIENT_PORT = 9000;
     private Connect connect;
@@ -57,7 +58,7 @@ public class SocketUtils extends AsyncTask<String, Void, String> {
         InetAddress loc = null;
         try {
             ds = new DatagramSocket(CLIENT_PORT);
-            loc = InetAddress.getByName(HttpUtils.IP);
+            loc = InetAddress.getByName(IP);
         } catch (SocketException | UnknownHostException e) {
             e.printStackTrace();
         }
