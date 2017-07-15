@@ -72,7 +72,7 @@ public class StorageActivity extends Activity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         items = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new StorageAdapter(this, items);
+        adapter = new StorageAdapter(this.getBaseContext(), items);
         recyclerView.setAdapter(adapter);
         startServer();
     }
@@ -149,7 +149,8 @@ public class StorageActivity extends Activity {
             }
             if (name == null) return;
 
-            num = adapter.add(name);
+            String filePath = savePath + name;
+            num = adapter.add(name,filePath);
             if (recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE
                     || (!recyclerView.isComputingLayout())) {
                 adapter.notifyItemInserted(num);
@@ -161,7 +162,6 @@ public class StorageActivity extends Activity {
             }
 
             try {
-                String filePath = savePath + name;
                 long length = dis.readLong();
                 dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filePath)));
 

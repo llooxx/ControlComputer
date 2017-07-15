@@ -1,22 +1,19 @@
 package com.linorz.controlcomputer;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.linorz.controlcomputer.tools.SocketUtils;
+import com.linorz.controlcomputer.tools.StaticMethod;
 import com.linorz.controlcomputer.zxing.android.CaptureActivity;
 
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private final int REQUEST_CODE_SCAN = 0x000;
@@ -28,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            String[] permissions = checkSelfPermissionArray(this, new String[]{
+            String[] permissions = StaticMethod.checkSelfPermissionArray(this, new String[]{
                     Manifest.permission.CAMERA,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -96,33 +93,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //批量申请权限
-    public static String[] checkSelfPermissionArray(Object cxt, String[] permission) {
-        ArrayList<String> permiList = new ArrayList<>();
-        for (String p : permission) {
-            if (!checkSelfPermissionWrapper(cxt, p)) {
-                permiList.add(p);
-            }
-        }
-        if (permiList.size() > 0) {
-            return permiList.toArray(new String[permiList.size()]);
-        } else {
-            return new String[]{};
-        }
-    }
 
-    //权限检查
-    @TargetApi(Build.VERSION_CODES.M)
-    private static boolean checkSelfPermissionWrapper(Object cxt, String permission) {
-        if (cxt instanceof Activity) {
-            Activity activity = (Activity) cxt;
-            return ActivityCompat.checkSelfPermission(activity,
-                    permission) == PackageManager.PERMISSION_GRANTED;
-        } else if (cxt instanceof Fragment) {
-            Fragment fragment = (Fragment) cxt;
-            return fragment.getActivity().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
-        } else {
-            throw new RuntimeException("cxt is net a activity or fragment");
-        }
-    }
 }
