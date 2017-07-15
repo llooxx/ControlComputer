@@ -56,41 +56,20 @@ public class TouchPadActivity extends Activity {
             case MotionEvent.ACTION_MOVE:
                 if (y < (screenHeight - height) / 2) {
                     if (Math.abs(x - last_x) > screenWidth * 0.05) {
-                        SocketUtils.post((x - last_x < 0) ? "wheelUp" : "wheelDown", new SocketUtils.Params()
-                                , false
-                                , new SocketUtils.Connect() {
-                                    @Override
-                                    public void onResponse(String response) {
-
-                                    }
-                                });
+                        SocketUtils.post((x - last_x < 0) ? "wheelUp" : "wheelDown", new SocketUtils.Params());
                         last_x = x;
                     }
                 } else
                     SocketUtils.post("movePoint", new SocketUtils.Params()
-                                    .add("scale_x", scale * (x - start_x) / screenWidth)
-                                    .add("scale_y", scale * (y - start_y) / screenHeight)
-                            , false
-                            , new SocketUtils.Connect() {
-                                @Override
-                                public void onResponse(String response) {
-
-                                }
-                            });
+                            .add("scale_x", scale * (x - start_x) / screenWidth)
+                            .add("scale_y", scale * (y - start_y) / screenHeight));
                 break;
             case MotionEvent.ACTION_DOWN:
                 current_time = System.currentTimeMillis();
                 if (current_time - last_time < 200) {
                     SocketUtils.post("pressPoint", new SocketUtils.Params()
-                                    .add("scale_x", scale * (x - start_x) / screenWidth)
-                                    .add("scale_y", scale * (y - start_y) / screenHeight)
-                            , false
-                            , new SocketUtils.Connect() {
-                                @Override
-                                public void onResponse(String response) {
-
-                                }
-                            });
+                            .add("scale_x", scale * (x - start_x) / screenWidth)
+                            .add("scale_y", scale * (y - start_y) / screenHeight));
                 }
                 last_time = current_time;
                 start_x = x;
@@ -100,26 +79,12 @@ public class TouchPadActivity extends Activity {
                 break;
             case MotionEvent.ACTION_UP:
                 SocketUtils.post("upPoint", new SocketUtils.Params()
-                                .add("scale_x", scale * (x - start_x) / screenWidth)
-                                .add("scale_y", scale * (y - start_y) / screenHeight)
-                        , false
-                        , new SocketUtils.Connect() {
-                            @Override
-                            public void onResponse(String response) {
-
-                            }
-                        });
+                        .add("scale_x", scale * (x - start_x) / screenWidth)
+                        .add("scale_y", scale * (y - start_y) / screenHeight));
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 // 第二个手指抬起事件
-                SocketUtils.post("doublePoint", new SocketUtils.Params()
-                        , false
-                        , new SocketUtils.Connect() {
-                            @Override
-                            public void onResponse(String response) {
-
-                            }
-                        });
+                SocketUtils.post("doublePoint", new SocketUtils.Params());
                 break;
         }
 

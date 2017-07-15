@@ -53,14 +53,7 @@ public class TouchAbsolutActivity extends Activity {
         y = event.getY();
         SocketUtils.post("currentPoint", new SocketUtils.Params()
                         .add("scale_x", x / width - temp)
-                        .add("scale_y", y / height - temp)
-                , false
-                , new SocketUtils.Connect() {
-                    @Override
-                    public void onResponse(String response) {
-
-                    }
-                });
+                        .add("scale_y", y / height - temp));
         return super.onTouchEvent(event);
     }
 }
