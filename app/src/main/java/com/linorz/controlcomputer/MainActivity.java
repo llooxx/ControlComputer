@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.linorz.controlcomputer.tools.SocketUtils;
 import com.linorz.controlcomputer.zxing.android.CaptureActivity;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         scan = (Button) findViewById(R.id.btn_scan);
+        Button storage = (Button) findViewById(R.id.btn_storage);
         Button touch1 = (Button) findViewById(R.id.btn_touch1);
         Button touch2 = (Button) findViewById(R.id.btn_touch2);
         scan.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
                 MainActivity.this.startActivityForResult(intent, REQUEST_CODE_SCAN);
+            }
+        });
+        storage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, StorageActivity.class);
+                MainActivity.this.startActivity(intent);
             }
         });
         touch1.setOnClickListener(new View.OnClickListener() {
@@ -71,11 +80,18 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
                         String content = data.getStringExtra(DECODED_CONTENT_KEY);
-                        System.out.println("!!!!!" + content);
                         scan.setText(content);
                         SocketUtils.IP = content;
                     }
                 }
+                SocketUtils.post("appInfo", new SocketUtils.Params()
+                                .add("ip", SocketUtils.getHostIP())
+                        , true, new SocketUtils.Connect() {
+                            @Override
+                            public void onResponse(String response) {
+
+                            }
+                        });
                 break;
         }
     }

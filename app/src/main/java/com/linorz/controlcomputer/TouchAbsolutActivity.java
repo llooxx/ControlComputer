@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.linorz.controlcomputer.tools.SocketUtils;
+
 
 /**
  * Created by linorz on 2017/7/14.
@@ -42,16 +44,6 @@ public class TouchAbsolutActivity extends Activity {
         lp.width = width;
         lp.height = height;
         view.setLayoutParams(lp);
-
-//        SocketUtils.post("appInfo", new SocketUtils.Params()
-//                        .add("pixel_width", width)
-//                        .add("pixel_height", height)
-//                , new SocketUtils.Connect() {
-//                    @Override
-//                    public void onResponse(String response) {
-//
-//                    }
-//                });
     }
 
 

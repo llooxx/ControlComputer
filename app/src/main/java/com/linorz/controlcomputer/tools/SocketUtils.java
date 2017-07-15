@@ -1,4 +1,4 @@
-package com.linorz.controlcomputer;
+package com.linorz.controlcomputer.tools;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -9,9 +9,12 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 /**
  * Created by linorz on 2017/7/14.
@@ -38,13 +41,13 @@ public class SocketUtils extends AsyncTask<String, Void, String> {
 
     public static void post(String action, Params params, Connect connect) {
         params.add("action", action);
-        params.add("needresponse",isNeedResponse);
+        params.add("needresponse", isNeedResponse);
         new SocketUtils(connect).execute(params.toJson());
     }
 
     public static void post(String action, Params params, boolean isNeedResponse, Connect connect) {
         params.add("action", action);
-        params.add("needresponse",isNeedResponse);
+        params.add("needresponse", isNeedResponse);
         new SocketUtils(connect, isNeedResponse).execute(params.toJson());
     }
 
@@ -126,6 +129,33 @@ public class SocketUtils extends AsyncTask<String, Void, String> {
         connect.onResponse(result);
     }
 
+    public static String getHostIP() {
+        String hostIp = null;
+        try {
+            Enumeration nis = NetworkInterface.getNetworkInterfaces();
+            InetAddress ia = null;
+            while (nis.hasMoreElements()) {
+                NetworkInterface ni = (NetworkInterface) nis.nextElement();
+                Enumeration<InetAddress> ias = ni.getInetAddresses();
+                while (ias.hasMoreElements()) {
+                    ia = ias.nextElement();
+                    if (ia instanceof Inet6Address) {
+                        continue;// skip ipv6
+                    }
+                    String ip_str = ia.getHostAddress();
+                    if (!"127.0.0.1".equals(ip_str)) {
+                        hostIp = ia.getHostAddress();
+                        break;
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            Log.i("EEE", "SocketException");
+            e.printStackTrace();
+        }
+        return hostIp;
+    }
+
     public interface Connect {
         void onResponse(String response);
     }
@@ -133,7 +163,7 @@ public class SocketUtils extends AsyncTask<String, Void, String> {
     public static class Params {
         JSONObject jo = new JSONObject();
 
-        Params add(String key, Object value) {
+        public Params add(String key, Object value) {
             jo.put(key, value);
             return this;
         }

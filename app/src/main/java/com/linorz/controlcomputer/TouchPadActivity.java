@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.linorz.controlcomputer.tools.SocketUtils;
+
 /**
  * Created by linorz on 2017/7/14.
  */
