@@ -21,7 +21,7 @@ import java.util.Enumeration;
  */
 
 public class SocketUtils extends AsyncTask<String, Void, String> {
-    public static String IP = "192.168.1.106";
+    public static String IP = "192.168.1.111";
     public int SERVER_PORT = 2333;
     public int CLIENT_PORT = 9000;
     private Connect connect;
@@ -49,6 +49,12 @@ public class SocketUtils extends AsyncTask<String, Void, String> {
         params.add("action", action);
         params.add("needresponse", isNeedResponse);
         new SocketUtils(connect, isNeedResponse).execute(params.toJson());
+    }
+
+    public static void post(String action, Params params) {
+        params.add("action", action);
+        params.add("needresponse", false);
+        new SocketUtils(null, false).execute(params.toJson());
     }
 
     @Override
@@ -126,7 +132,8 @@ public class SocketUtils extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        connect.onResponse(result);
+        if (connect != null)
+            connect.onResponse(result);
     }
 
     public static String getHostIP() {
