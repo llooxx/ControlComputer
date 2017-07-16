@@ -1,14 +1,14 @@
 #Fat Jar Configuration File
-#Sat Jul 15 00:56:47 CST 2017
+#Mon Jul 17 00:18:13 CST 2017
 onejar.license.required=false
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=true
-jarname=ControlComputer.jar
+jarname=C\:\\Users\\linorz\\Desktop\\ControlComputer.jar
 manifest.mergeall=true
 manifest.mainclass=com.linorz.main.Main
 manifest.file=<createnew>
-jarname.isextern=false
+jarname.isextern=true
 onejar.expand=
 excludes=
 includes=

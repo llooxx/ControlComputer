@@ -12,6 +12,7 @@ public class Actions {
     static double start_x = 0, start_y = 0;
     static int xx, yy;
     static boolean isPress = false;
+    static ScreenClient sc;
 
     public static String test(JSONObject request) {
         int test = request.getInteger("test");
@@ -132,6 +133,18 @@ public class Actions {
     public static String appFilePort(JSONObject request) {
         Main.APP_FILE_PORT = request.getInteger("port");
         Main.APP_IP = request.getString("ip");
+        return Constant.SUCCESS;
+    }
+
+    public static String screenSend(JSONObject request) {
+        sc = new ScreenClient(Main.APP_IP, Main.APP_FILE_PORT);
+        sc.sendScreen();
+        return Constant.SUCCESS;
+    }
+
+    public static String stopScreenSend(JSONObject request) {
+        if (sc != null)
+            sc.stop();
         return Constant.SUCCESS;
     }
 }
