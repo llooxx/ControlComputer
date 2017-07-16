@@ -17,6 +17,12 @@
         android:text="文件传输"
         android:layout_weight="1" />
     <Button
+        android:id="@+id/btn_screen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="屏幕传输"
+        android:layout_weight="1" />
+    <Button
         android:id="@+id/btn_touch1"
         android:layout_width="match_parent"
         android:layout_height="0dp"

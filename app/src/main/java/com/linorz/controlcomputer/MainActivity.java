@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         scan = (Button) findViewById(R.id.btn_scan);
         Button storage = (Button) findViewById(R.id.btn_storage);
+        Button btn_screen= (Button) findViewById(R.id.btn_screen);
         Button touch1 = (Button) findViewById(R.id.btn_touch1);
         Button touch2 = (Button) findViewById(R.id.btn_touch2);
         scan.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +51,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, StorageActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
+        btn_screen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ScreenActivity.class);
                 MainActivity.this.startActivity(intent);
             }
         });
