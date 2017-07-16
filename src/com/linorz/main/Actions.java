@@ -131,6 +131,7 @@ public class Actions {
 
     public static String appFilePort(JSONObject request) {
         Main.APP_FILE_PORT = request.getInteger("port");
+        Main.APP_IP = request.getString("ip");
         return Constant.SUCCESS;
     }
 }
