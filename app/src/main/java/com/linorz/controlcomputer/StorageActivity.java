@@ -112,7 +112,7 @@ public class StorageActivity extends Activity {
         try {
             serverSocket = new ServerSocket(port);
             Log.e("EEE", port + "服务启动!");
-            SocketUtils.post("appFilePort", new SocketUtils.Params().add("port", port));
+            SocketUtils.post("appFilePort", new SocketUtils.Params().add("port", port).add("ip",SocketUtils.getHostIP()));
         } catch (Exception e) {
             this.tryBindTimes = this.tryBindTimes + 1;
             port = port + this.tryBindTimes;
