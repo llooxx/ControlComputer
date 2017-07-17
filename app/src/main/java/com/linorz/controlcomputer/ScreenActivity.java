@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -36,12 +38,23 @@ public class ScreenActivity extends Activity {
     private SurfaceView screen;
     private SurfaceHolder holder; //控制对象
     private ServerSocket serverSocket;
-    private ExecutorService executorService;    //线程池
     private int defaultBindPort = 20000;    //默认监听端口号为20000
     private int tryBindTimes = 0;
     private Paint paint;
     private Rect rect;
     private Thread thread;
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            byte[] image = (byte[]) message.obj;
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+            Canvas canvas = holder.lockCanvas();
+            canvas.drawBitmap(bitmap, null, rect, paint);
+            holder.unlockCanvasAndPost(canvas);
+
+            return false;
+        }
+    });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,8 +98,6 @@ public class ScreenActivity extends Activity {
             public void run() {
                 try {
                     bingToServerPort(defaultBindPort);
-                    executorService = Executors.newFixedThreadPool(Runtime.getRuntime()
-                            .availableProcessors() * 2);
                 } catch (Exception e) {
                     Log.e("EEE", "绑定端口不成功!");
                 }
@@ -95,7 +106,7 @@ public class ScreenActivity extends Activity {
                 while (true) {
                     try {
                         socket = serverSocket.accept();
-                        executorService.execute(drawCanvas(socket));
+                        drawCanvas(socket).start();
                     } catch (IOException e) {
                         Log.e("EEE", "连接断开");
                         break;
@@ -106,7 +117,6 @@ public class ScreenActivity extends Activity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                executorService.shutdown();
             }
         });
         thread.start();
@@ -123,13 +133,11 @@ public class ScreenActivity extends Activity {
 
                     if (rect == null)
                         rect = new Rect(0, 0, screen.getMeasuredWidth(), screen.getMeasuredHeight());
+                    System.out.println("!!!!!!!!!!!!!!!!!");
 
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
-                    Canvas canvas = holder.lockCanvas();
-                    canvas.drawBitmap(bitmap, null, rect, paint);
-                    holder.unlockCanvasAndPost(canvas);
-
-                    TimeUnit.MILLISECONDS.sleep(10);// 接收图片间隔时间
+                    Message message = new Message();
+                    message.obj = image;
+                    handler.sendMessage(message);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
