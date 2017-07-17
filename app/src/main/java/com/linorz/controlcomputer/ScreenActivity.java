@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,9 +26,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -35,12 +33,10 @@ import java.util.zip.ZipInputStream;
  */
 
 public class ScreenActivity extends Activity {
-    private SurfaceView screen;
-    private SurfaceHolder holder; //控制对象
+    private TextureView screen;
     private ServerSocket serverSocket;
     private int defaultBindPort = 20000;    //默认监听端口号为20000
     private int tryBindTimes = 0;
-    private Paint paint;
     private Rect rect;
     private Thread thread;
     Handler handler = new Handler(new Handler.Callback() {
@@ -48,9 +44,9 @@ public class ScreenActivity extends Activity {
         public boolean handleMessage(Message message) {
             byte[] image = (byte[]) message.obj;
             Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
-            Canvas canvas = holder.lockCanvas();
-            canvas.drawBitmap(bitmap, null, rect, paint);
-            holder.unlockCanvasAndPost(canvas);
+            Canvas canvas = screen.lockCanvas();
+            canvas.drawBitmap(bitmap, null, rect, null);
+            screen.unlockCanvasAndPost(canvas);
 
             return false;
         }
@@ -66,11 +62,7 @@ public class ScreenActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activty_screen);
 
-        screen = (SurfaceView) findViewById(R.id.screen_surface);
-        holder = screen.getHolder();
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setFilterBitmap(true);
-        paint.setDither(true);
+        screen = (TextureView) findViewById(R.id.screen_surface);
 
         startServer();
     }
@@ -133,12 +125,10 @@ public class ScreenActivity extends Activity {
 
                     if (rect == null)
                         rect = new Rect(0, 0, screen.getMeasuredWidth(), screen.getMeasuredHeight());
-                    System.out.println("!!!!!!!!!!!!!!!!!");
 
                     Message message = new Message();
                     message.obj = image;
                     handler.sendMessage(message);
-                    TimeUnit.MILLISECONDS.sleep(10);// 接收图片间隔时间
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
