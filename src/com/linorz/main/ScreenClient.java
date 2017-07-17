@@ -97,6 +97,7 @@ public class ScreenClient {
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ZipOutputStream zip = new ZipOutputStream(bos);
+			zip.setLevel(9);
 			ZipEntry entry = new ZipEntry("zip");
 			entry.setSize(data.length);
 			zip.putNextEntry(entry);
