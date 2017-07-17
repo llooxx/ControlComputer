@@ -39,15 +39,16 @@ public class ScreenActivity extends Activity {
     private int tryBindTimes = 0;
     private Rect rect;
     private Thread thread;
+    private BitmapFactory.Options options;
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
             byte[] image = (byte[]) message.obj;
-            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length, options);
             Canvas canvas = screen.lockCanvas();
             canvas.drawBitmap(bitmap, null, rect, null);
             screen.unlockCanvasAndPost(canvas);
-
+            bitmap.recycle();
             return false;
         }
     });
@@ -63,7 +64,8 @@ public class ScreenActivity extends Activity {
         setContentView(R.layout.activty_screen);
 
         screen = (TextureView) findViewById(R.id.screen_surface);
-
+        options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
         startServer();
     }
 
