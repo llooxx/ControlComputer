@@ -138,6 +138,7 @@ public class ScreenActivity extends Activity {
                     Message message = new Message();
                     message.obj = image;
                     handler.sendMessage(message);
+                    TimeUnit.MILLISECONDS.sleep(10);// 接收图片间隔时间
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
