@@ -50,9 +50,9 @@ public class ScreenClient {
 						g2.setColor(new Color(255, 0, 0, 200));
 						g2.fillRoundRect(p.x - 10, p.y - 10, 20, 20, 20, 20);
 
-						int width =img.getWidth();
-						int height =img.getHeight();
-						
+						int width = (int) (img.getWidth()/1.1);
+						int height = (int) (img.getHeight()/1.1);
+
 						BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 						image.getGraphics().drawImage(img, 0, 0, width, height, null);
 						
