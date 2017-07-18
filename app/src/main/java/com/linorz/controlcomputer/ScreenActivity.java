@@ -4,17 +4,17 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.Display;
+import android.view.MotionEvent;
 import android.view.TextureView;
-import android.view.ViewGroup;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -40,6 +40,9 @@ public class ScreenActivity extends Activity {
     private Rect rect;
     private Thread thread;
     private BitmapFactory.Options options;
+
+    int screenWidth, screenHeight;
+
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
@@ -62,11 +65,60 @@ public class ScreenActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activty_screen);
+        hideBottomUIMenu();
 
         screen = (TextureView) findViewById(R.id.screen_surface);
         options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        screenWidth = display.getWidth();
+        screenHeight = display.getHeight();
+
         startServer();
+    }
+
+    double x, y, start_x, start_y, last_x, last_y;
+    long current_time = 0;
+    long last_time = 0;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        x = event.getX();
+        y = event.getY();
+
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_MOVE:
+                SocketUtils.post("currentPoint", new SocketUtils.Params()
+                        .add("scale_x", 1 - y / screenHeight)
+                        .add("scale_y", x / screenWidth));
+                break;
+            case MotionEvent.ACTION_DOWN:
+                current_time = System.currentTimeMillis();
+                if (current_time - last_time < 200) {
+                    SocketUtils.post("pressPoint", new SocketUtils.Params()
+                            .add("scale_x", 0)
+                            .add("scale_y", 0));
+                }
+                last_time = current_time;
+                start_x = x;
+                start_y = y;
+                last_x = x;
+                last_y = y;
+                break;
+            case MotionEvent.ACTION_UP:
+                SocketUtils.post("upPoint", new SocketUtils.Params()
+                        .add("scale_x", 0)
+                        .add("scale_y", 0));
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                // 第二个手指抬起事件
+                SocketUtils.post("doublePoint", new SocketUtils.Params());
+                break;
+        }
+
+        return super.onTouchEvent(event);
     }
 
     private void bingToServerPort(int port) throws Exception {
@@ -167,6 +219,22 @@ public class ScreenActivity extends Activity {
         return b;
     }
 
+    /**
+     * 隐藏虚拟按键，并且全屏
+     */
+    protected void hideBottomUIMenu() {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+    }
 
     @Override
     public void onBackPressed() {
