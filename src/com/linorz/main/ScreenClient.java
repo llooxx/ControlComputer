@@ -50,9 +50,14 @@ public class ScreenClient {
 						g2.setColor(new Color(255, 0, 0, 200));
 						g2.fillRoundRect(p.x - 10, p.y - 10, 20, 20, 20, 20);
 
+						int width = (int) (img.getWidth()/1.3);
+						int height = (int) (img.getHeight()/1.3);
+						BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+						image.getGraphics().drawImage(img, 0, 0, width, height, null);
+						
 						ByteArrayOutputStream baos = new ByteArrayOutputStream();
 						JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
-						encoder.encode(img);
+						encoder.encode(image);
 
 						byte[] data = baos.toByteArray();
 						dos.write(zip(data));
